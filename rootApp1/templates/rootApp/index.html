@@ -1,0 +1,1275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+    <title>App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/static/rootApp/asset/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link href="/static/rootApp/asset/css/style.css" rel="stylesheet" />
+    <link href="/static/rootApp/asset/css/jquery-ui.css" rel="stylesheet" />
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.12/leaflet.draw.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/static/rootApp/css/leaflet-measure.css">
+    <link rel="stylesheet" href="/static/rootApp/asset/css/Control.TileLoadingProgress.css ">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/gokertanrisever/leaflet-ruler/master/src/leaflet-ruler.css">
+    <link rel="stylesheet" href="/static/rootApp/leaflet/L.Control.MousePosition.css">
+    <style type="text/css">
+    * {
+        box-sizing: border-box;
+    }
+
+    .img-comp-container {
+        position: relative;
+        height: 100vh;
+        /*should be the same height as the images*/
+    }
+
+    .img-comp-img {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .img-comp-slider {
+        position: absolute;
+        z-index: 999999999;
+        cursor: ew-resize;
+        /*set the appearance of the slider:*/
+        width: 40px;
+        height: 40px;
+        background-color: #2196f3;
+        opacity: 0.7;
+        border-radius: 50%;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .ui-dialog {
+        z-index: 10000 !important;
+    }
+
+    .ui-dialog #dialog {
+        padding: 5px !important;
+    }
+
+    .btn-update {
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        background-color: rgb(248 255 252 / 46%);
+        border: 2px solid #8dd4b2;
+        border-radius: 50px;
+        width: auto;
+        height: 30px;
+        margin-bottom: 10px;
+    }
+
+    .overlay {
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        z-index: 99999;
+        background: #f9f3f3fa;
+    }
+
+    .loader {
+        position: relative;
+        width: 30%;
+        margin-left: 35%;
+        margin-top: 43vh;
+    }
+
+    .overlay1 {
+        position: absolute;
+        width: 100%;
+        height: 50vh;
+        z-index: 99999;
+        background: #ffffffeb;
+    }
+
+    .alert {
+        z-index: 99999;
+        margin-bottom: 0px !important;
+    }
+
+    .loader1 {
+        position: relative;
+        width: 30%;
+        margin-left: 35%;
+        margin-top: 20vh;
+    }
+
+    .overlay2 {
+        position: absolute;
+        width: 100%;
+        height: 50vh;
+        z-index: 99999;
+        background: #ffffffeb;
+    }
+
+    .loader2 {
+        position: relative;
+        width: 30%;
+        margin-left: 35%;
+        margin-top: 10vh;
+    }
+
+    .overlay3 {
+        position: absolute;
+        width: 100%;
+        height: 50vh;
+        z-index: 99999;
+        background: #ffffffeb;
+    }
+
+    .loader3 {
+        position: relative;
+        width: 30%;
+        margin-left: 35%;
+        margin-top: 10vh;
+    }
+
+    .galaimages {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background-color: #ff7800;
+    }
+
+    .eok {
+        float: right;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="overlay" class="overlay">
+        <div class="col-md-12">
+            <img class="loader" src="/static/rootApp/asset/images/loader.gif" />
+        </div>
+    </div>
+    <header class="to-header topbar">
+        <img id="" target="_blank" src="/static/rootApp/asset/images/logo/SERVIR-WA.png" class="logo pull-right" title="SERVIR West Africa" style="" />
+        <img id="" target="_blank" src="/static/rootApp/asset/images/logo/usaid.png" class="logo" title="USAID" />
+        <img id="" target="_blank" src="/static/rootApp/asset/images/logo/nasa.png" class="logo" title="NASA" />
+        <img id="" target="_blank" src="/static/rootApp/asset/images/logo/cliss.png" class="logo" title="CLISS" />
+        <img id="" target="_blank" src="/static/rootApp/asset/images/logo/cersgis.png" class="logo" title="CERSGIS" />
+        <!-- <a class="navbar-brand" href="#" style="color: #fff; font-size: 21px;">Tethys Django App</a> -->
+    </header>
+    <nav class="navbar navbar-default topbar abovemap">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-4">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div id="" class=""></div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-4">
+                <h4 class="title-block">Charcoal Production Monitoring Portal</h4>
+                <ul class="nav navbar-nav" style="float: right">
+                    <li class="active"><a href="/">Home</a></li>
+                    <!--  <li><a href="map.html">About</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" /> Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" style="z-index: 10002!important;">
+                            <li><a href="#"> drop 1 </a></li>
+                            <li><a href="#"> drop 2 </a></li>
+                        </ul>
+                    </li> -->
+                    <li><a href="/">About</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <div class="slideBox" id="slid" style="height: 41vh; width: 100%; position:absolute;">
+        <div class="img-comp-container">
+            <div class="img-comp-img">
+                <div id="alert" class="alert alert-danger alert-dismissible hidden">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <center> <strong>Sorry!</strong>Please check your internet connectivity and try
+                        again .</center>
+                </div>
+                <div id="noimage" class="alert alert-info alert-dismissible hidden">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <center> <strong>Sorry! </strong> There were no images for your request .
+                </div>
+                </center>
+                <div class="map" id="mapid">
+                    <div class="lgnd abovemap">
+                        <div class="col-md-12" style="padding: 0px"></div>
+                    </div>
+                    <div class="inner abovemap">
+                        <div class="inner-side inner1">
+                            <img id="zin" src="/static/rootApp/asset/images/mapcons/zin1.png" class="mapicon" title="Zoom in" />
+                            <img id="zout" src="/static/rootApp/asset/images/mapcons/zout1.png" class="mapicon" title="Zoom out" />
+                             <img id="previousebtn" src="/static/rootApp/asset/images/mapcons/previous-extent.png" class="mapicon" title="previous zoom">
+                            <img id="Zoomextent" src="/static/rootApp/asset/images/mapcons/extent1.png" class="mapicon" title="extent" />
+                            <img id="opener" src="/static/rootApp/asset/images/mapcons/ruler1.png" class="mapicon" title="toggle Legend" />
+                            
+                            <img id="legendbtn" src="/static/rootApp/asset/images/mapcons/legend1.png" class="mapicon" title="toggle legend" />
+                            <img id="comparetool" src="/static/rootApp/asset/images/mapcons/toggle1.png" class="mapicon " title="Compare Layers" />
+                            <!-- <img id="comparetool" src="/static/rootApp/asset/images/mapcons/toogle1.png" class="mapicon" title="Compare tool" /> -->
+                           
+                        </div>
+                        <div class="side layerbox">
+                            <div class="inner-side inner2">
+                                <div id="toolbar" class="printhidden">
+                                    <img id="close" src="/static/rootApp/asset/images/mapcons/close.png" class="toolbaricon" title="toggle Duration" />
+                                </div>
+                                <div id="toolbox" class="toolbox">
+                                    <div class="accordion">
+                                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingOne">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                            <i class="more-less glyphicon glyphicon-plus"></i>
+                                                            Boundaries
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                    <div class="panel-body">
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div id="ecowasCheck" class="layer disp on">
+                                                                Ecowas
+                                                                <i class="fa fa-eye disp on" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div id="regionCheck" class="layer">
+                                                                Region
+                                                                <i class="fa fa-eye-slash disp off" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div id="districtCheck" class="layer">
+                                                                District
+                                                                <i class="fa fa-eye-slash disp off" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div id="settlementCheck" class="layer">
+                                                                Settlement
+                                                                <i class="fa fa-eye-slash disp off" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div id="proectedCheck" class="layer">
+                                                                Protected Area
+                                                                <i class="fa fa-eye-slash disp off" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingSix">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="collapseOne">
+                                                            <i class="more-less glyphicon glyphicon-plus"></i>
+                                                            Additional Layers
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                                                    <div class="panel-body">
+                                                        <!-- Layer Bar-->
+                                                        <!--  <div class="layerbar">
+                                  <div id="landsatCheck" class="layer">
+                                    Landsat 8 Composite
+                                    <i
+                                      class="fa fa-eye-slash disp off"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </div>
+                                  <select id="landsatcompo" class="form-control">
+                                    <option></option>
+                                    <option>2015</option>
+                                    <option>2016</option>
+                                    <option>2017</option>
+                                    <option>2018</option>
+                                    <option>2019</option>
+                                    <option>2020</option>
+                                    <option>2021</option>
+                                  </select>
+                                </div> -->
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div id="aoicheck" class="layer">
+                                                                Area of Interest
+                                                                <i class="fa fa-eye-slash disp off" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingTwo">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                            <i class="more-less glyphicon glyphicon-plus"></i>
+                                                            Charcoal Kilns Dataset
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                    <div class="panel-body">
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="char2019" class="layer disp off">
+                                                                    2019
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    Density map
+                                                                    <input class="eok" id="heat2019" type="checkbox" name="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="char2020" class="layer disp off">
+                                                                    2020
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    Density map
+                                                                    <input class="eok" id="heat2020" type="checkbox" name="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Layer Bar-->
+                                                        <!--  <div class="layerbar">
+                                  <div id="char2020" class="layer">
+                                    2020
+                                    <i
+                                      class="fa fa-eye-slash disp off"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </div>
+                                </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingSix">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesix" aria-expanded="false" aria-controls="collapsesix">
+                                                            <i class="more-less glyphicon glyphicon-plus"></i>
+                                                            Treecover dataset
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapsesix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                                                    <div class="panel-body">
+                                                        <!-- Layer Bar-->
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2013" class="layer disp off">
+                                                                    2013
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2013range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2014" class="layer disp off">
+                                                                    2014
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2014range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2015" class="layer disp off">
+                                                                    2015
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2015range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2016" class="layer disp off">
+                                                                    2016
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2016range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2017" class="layer disp off">
+                                                                    2017
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2017range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2018" class="layer disp off">
+                                                                    2018
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2018range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2019" class="layer disp off">
+                                                                    2019
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2019range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layerbar">
+                                                            <div>
+                                                                <div id="tree2020" class="layer disp off">
+                                                                    2020
+                                                                    <i class="fa fa-eye disp off eok" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="range" min="0" max="10" value="10" title="opacity" sliderref="miningsite{{dt}}" class="slider miningareaslider " id="tree2020range" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Layer Bar-->
+                                                        <!--  <div class="layerbar">
+                                  <div id="char2020" class="layer">
+                                    2020
+                                    <i
+                                      class="fa fa-eye-slash disp off"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </div>
+                                </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="heading4">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                                            <i class="more-less glyphicon glyphicon-plus"></i>
+                                                            Basemaps
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+                                                    <div class="panel-body">
+                                                        <div class="">
+                                                            <div class="col-md-4 lgndthumb" id="basemap1">
+                                                                <img src="/static/rootApp/asset/images/maplegend/cartodb_positron.png" />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap9">
+                                                                <img src="/static/rootApp/asset/images/maplegend/esri_oceanbasemap.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap3">
+                                                                <img src="/static/rootApp/asset/images/maplegend/esri_worldterrain.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap2">
+                                                                <img src="/static/rootApp/asset/images/maplegend/here_satelliteday.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap5">
+                                                                <img src="/static/rootApp/asset/images/maplegend/stamen_toner.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap6">
+                                                                <img src="/static/rootApp/asset/images/maplegend/here_normalday.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap7">
+                                                                <img src="/static/rootApp/asset/images/maplegend/esriworldshadedrelief.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="basemap8">
+                                                                <img src="/static/rootApp/asset/images/maplegend/openstreetmap_blackandwhite.png " />
+                                                            </div>
+                                                            <div class="col-md-4 lgndthumb" id="no_basemap">
+                                                                <img src="/static/rootApp/asset/images/maplegend/white.png" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- panel-group -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--   <div class="slider-year-container" id="asd">
+                        <input type="text" class="js-range-slider" name="my_range" value="" />
+                    </div> -->
+                    <div id="dialog" title="Charts">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <span class="">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs">
+                                        <li class="active">
+                                            <a href="#tab1" data-toggle="tab">Quarterly Time Series
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#tab2" data-toggle="tab"> Daily Time Series </a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab1">
+                                        <div class="row">
+                                            <div class="col-md-4 date-row" style="">
+                                                <div class="form-group">
+                                                    <label for="sel1">FROM:</label>
+                                                    <!-- <input id="tfrom" class="form-control" type="date" name=""> -->
+                                                    <select id="tfrom" class="form-control">
+                                                        <option></option>
+                                                        <option>2014</option>
+                                                        <option>2015</option>
+                                                        <option>2016</option>
+                                                        <option>2017</option>
+                                                        <option>2018</option>
+                                                        <option>2019</option>
+                                                        <option>2020</option>
+                                                        <option>2021</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 date-row" style="">
+                                                <div class="form-group">
+                                                    <label for="sel1">END:</label>
+                                                    <!--      <input id="tto" class="form-control" type="date" name=""> -->
+                                                    <select id="tto" class="form-control">
+                                                        <option></option>
+                                                        <option>2014</option>
+                                                        <option>2015</option>
+                                                        <option>2016</option>
+                                                        <option>2017</option>
+                                                        <option>2018</option>
+                                                        <option>2019</option>
+                                                        <option>2020</option>
+                                                        <option>2021</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 date-row" style="">
+                                                <br>
+                                                <button id="subyearchart" class="btn btn-success">submit</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="overlay2 hidden">
+                                                <div class="col-md-12">
+                                                    <img class="loader2" src="/static/rootApp/asset/images/loader.gif" />
+                                                </div>
+                                            </div>
+                                            <div id="tsresults"></div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab2">
+                                        <div class="row">
+                                            <div class="col-md-4 date-row" style="">
+                                                <div class="form-group">
+                                                    <label for="sel1">FROM:</label>
+                                                    <input id="datefrom" class="form-control" type="date" name="" />
+                                                    <!--  <select id="tfrom" class="form-control" >
+                                                        <option>   </option>
+                                                        <option>2014</option>
+                                                        <option>2015</option>
+                                                        <option>2016</option>
+                                                        <option>2017</option>
+                                                        <option>2018</option>
+                                                        <option>2019</option>
+                                                        <option>2020</option>
+                                                        <option>2021</option>
+                                                   </select> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 date-row" style="">
+                                                <div class="form-group">
+                                                    <label for="sel1">END:</label>
+                                                    <input id="dateto" class="form-control" type="date" name="" />
+                                                    <!--   <select id="tto" class="form-control" >
+                                                        <option>     </option>
+                                                        <option>2014</option>
+                                                        <option>2015</option>
+                                                        <option>2016</option>
+                                                        <option>2017</option>
+                                                        <option>2018</option>
+                                                        <option>2019</option>
+                                                        <option>2020</option>
+                                                        <option>2021</option>
+                                                   </select> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 date-row" style="">
+                                                <br>
+                                                <button id="subdailychart" class="btn btn-success">submit</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="overlay3 hidden">
+                                                <div class="col-md-12">
+                                                    <img class="loader3" src="/static/rootApp/asset/images/loader.gif" />
+                                                </div>
+                                            </div>
+                                            <div id="dateresults"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Legenddialog" title="Legend">
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="grouplayer">
+                                    <h4 class="legendHead">Kilns</h4>
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            2019
+                                            <span class="lgdicon_point query1"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            2020
+                                            <span class="lgdicon_point query2"> </span>
+                                        </div>
+                                    </div>
+                                    <!--  <div class="layerbar1">
+                        <div id="regionCheck" class="layer">
+                          Newly Active
+                          <span class="lgdicon Active"> </span>
+                        </div>
+                      </div> -->
+                                    <!-- 
+                      <div class="layerbar1">
+                        <div id="regionCheck" class="layer">
+                          Inactive
+                          <span class="lgdicon Inactive"> </span>
+                        </div>
+                      </div> -->
+                                </div>
+                                <div class="grouplayer">
+                                    <h4 class="legendHead">Boundary</h4>
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            Ecowas
+                                            <span class="lgdicon Ecowas"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            Region
+                                            <span class="lgdicon Region"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            District
+                                            <span class="lgdicon District"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            Settlement
+                                            <span class="lgdicon_point Settlement"> </span>
+                                        </div>
+                                    </div>
+                                    <!--  <div class="layerbar1">
+                        <div id="regionCheck" class="layer">
+                          Galamsey Site Images
+                          <span class="lgdicon_point galaimages"> </span>
+                        </div>
+                      </div> -->
+                                    <div class="layerbar1">
+                                        <div id="regionCheck" class="layer">
+                                            Protected Area
+                                            <span class="lgdicon Protected"> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grouplayer">
+                                    <h4 class="legendHead">Tree Cover </h4>
+                                    <img src="/static/rootApp/img/treecoce.png " style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="about_dialog" title="About dialog">
+                        <p>
+                            The Charcoal Production Site Monitoring Service, a joint initiative of SERVIR-PCU, NASA SCO, AST, A Rocha and CERSGIS to help developing countries use information provided by Earth observing satellites and geospatial technologies for identifying charcoal production sites and associated changes in woody vegetation cover on a regular basis.eas to support SERVIR WEST AFRICA's Galamsey Monitoring
+                            System.
+                        </p>
+                    </div>
+                    <div id="changedetection" title="Kilns Computation">
+                        <div class="overlay1 hidden">
+                            <div class="col-md-12">
+                                <img class="loader1" src="/static/rootApp/asset/images/loader.gif" />
+                            </div>
+                        </div>
+                        <div class="row" id="analysis_cont"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="img-comp-img img-comp-overlay" style="z-index: 998">
+                <div class="map" id="mapid2" style="
+                width: 100%;
+                height: 94vh;
+                position: relative;
+                overflow: hidden;
+                background: rgba(0, 0, 0, 0.1);
+                z-index: 998;
+              ">
+                    <div id="loader" class="fa-4x hidden "><i style="z-index: 99999; position: absolute;margin-top: 50% ;margin-left:50%" class="fas fa-spinner fa-pulse"></i></div>
+                    <div style="z-index: 999; position: absolute; right: 0vw">
+                        <div class="row">
+                            <div class="col-md-4 date-row" style="">
+                                <select id="layertypesel" class="form-control">
+                                    <option value="">Select Layer to compare </option>
+                                    <option value="heatmap">Heatmap</option>
+                                    <option value="treecover">Tree Cover</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 date-row" style="">
+                                <select id="yearsel" class="form-control hidden">
+                                    <option class="treehide" value="">Select Layer to compare </option>
+                                    <option class="treehide" value="2014">2014</option>
+                                    <option class="treehide" value="2015">2015</option>
+                                    <option class="treehide" value="2016">2016</option>
+                                    <option class="treehide" value="2017">2017</option>
+                                    <option class="treehide" value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                                <select id="yearsel_heat" class="form-control hidden">
+                                    <option class="" value="">Select Layer to compare </option>
+                                    <!--  <option class="" value="2014">2014</option>
+                      <option class="" value="2015">2015</option>
+                      <option class="" value="2016">2016</option>
+                      <option class="" value="2017">2017</option> -->
+                                    <!-- <option class="" value="2018">2018</option> -->
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="compareupdate1" class="btn btn-success" style="margin-top: 11%;">
+                                    UPDATE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--Plugin JavaScript file-->
+    {% comment %}
+    <script src="/static/rootApp/asset/js/jquery.min.js"></script>
+    <script src="/static/rootApp/asset/js/bootstrap.min.js"></script>
+    {% endcomment %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- <script
+      src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+ -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="/static/rootApp/asset/js/leaflet-heat.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet-src.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.12/leaflet.draw.js"></script>
+    <script type="text/javascript" src="/static/rootApp/asset/js/L.Map.Sync.js"></script>
+    <script src="/static/rootApp/asset/js/jquery-ui.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="/static/rootApp/asset/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+    <script src="/static/rootApp/leaflet/L.Control.MousePosition.js"></script>
+    <script src="/static/rootApp/leaflet/leaflet.browser.print.min.js"></script>
+    <script src="/static/rootApp/js/leaflet.filelayer.js"></script>
+    <script src="/static/rootApp/js/Control.TileLoadingProgress.js"></script>
+    <script type="text/javascript" src="/static/rootApp/asset/js/myfunctions.js"></script>
+    <script type="text/javascript">
+
+
+
+
+
+    initialbasemap = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+        }
+    );
+
+
+
+
+    var mymap = L.map("mapid", {
+        zoomControl: false,
+        layers: [initialbasemap],
+    }).setView([9.258089172541451, -1.645479135666168], 15);
+    // .addTo(mymap);
+
+    // initialbasemap.bringToBack();
+    var mymap2 = L.map("mapid2", { drawControl: false }).setView(
+        [9.258089172541451, -1.645479135666168],
+        15
+    );
+
+
+    L.tileLayer("").addTo(mymap2)
+    // L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+    //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //     maxZoom: 20,
+    //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    // }).addTo(mymap2);
+
+
+
+    mymap.sync(mymap2);
+    mymap2.sync(mymap);
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function GetSelection(layer) {
+
+        $.get("/map/countkiln/?coord=" + coords, function(res) {
+
+
+            $("#changedetection").dialog("open");
+
+            $("#analysis_cont").html(res)
+
+
+
+        });
+
+
+    };
+
+
+
+
+    let coords, layer
+    var drawnItems = L.geoJson().addTo(mymap);
+    mymap.addControl(new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        },
+        draw: {
+            polygon: true,
+            rectangle: true,
+            circle: false,
+            circlemarker: false,
+            marker: false,
+            polyline: false,
+
+        }
+
+    }));
+
+    mymap.on('draw:created', function(event) {
+        drawnItems.removeLayer(layer);
+        layer = event.layer;
+        drawnItems.removeLayer(layer);
+
+
+        coords = layer.getLatLngs();
+
+        GetSelection(layer)
+        // if(layer instanceof L.Rectangle){
+
+        //    coords = layer.getLatLngs();
+
+        //  GetSelection(layer)
+        // }
+
+        drawnItems.addLayer(layer);
+    });
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js"></script>
+    <script type="text/javascript" src="/static/rootApp/asset/js/leaflet-heat.js"></script>
+    <script type="text/javascript" src="/static/rootApp/asset/js/map.js"></script>
+    <script type="text/javascript">
+    $(".overlay")
+        .delay(0)
+        .queue(function(next) {
+            $(this).css("display", "none");
+            next();
+        });
+
+
+
+    checkvis = true;
+    $("#comparetool").click(function() {
+        // $(".img-comp-overlay").toggleClass("hidden");
+        // $(".img-comp-slider").toggleClass("hidden");
+          if (checkvis) {
+        $('#mapid2').show();
+        $('.img-comp-slider').show();
+        // compararray.push('swipebtn');
+        mymap.sync(mymap2);
+        mymap2.sync(mymap);
+        checkvis = false;
+        } else {
+            $('#mapid2').hide();
+            $('.img-comp-slider').hide();
+            mymap.unsync(mymap2);
+            mymap2.unsync(mymap);
+            checkvis = true;
+            // removearray(compararray, 'swipebtn');
+        }
+
+    });
+
+
+
+ var zoomextpre = 0;
+
+$('body').on('click', '#previousebtn' , function () {
+
+    if (zoomextpre == 1) {
+        mymap.setZoom(currentzoom1);
+        zoomextpre = 0;
+    }
+});
+
+mymap.on('zoomstart', function(e) {
+    currentzoom1 = mymap.getZoom();
+    zoomextpre = 1;
+
+})
+
+//$('.comlabel').prop('disabled', true)
+//$('.houselabel').prop('disabled', true)
+mymap.on('zoomend', function(e) {
+    currentzoom = mymap.getZoom();
+    if (currentzoom >= 9) {
+        //$('.comlabel').prop('disabled', false)
+    } else {
+        //$('.comlabel').prop('disabled', true).prop('checked', false).trigger('change')
+    }
+    if (currentzoom >= 11) {
+        //$('.houselabel').prop('disabled', false)
+    } else {
+        //$('.houselabel').prop('disabled', true).prop('checked', false).trigger('change')
+    }
+})
+
+
+
+
+
+
+
+    // $('#mapid2').hide().delay( 4000 );
+    // $('.img-comp-slider').hide().delay( 4000 );
+    // $("#comparetool").trigger("click");
+$(document).ready(function() {
+    $('#mapid2').delay(3000).hide();
+     $('.img-comp-slider').delay(3000).hide();
+});
+
+
+
+    $("#dialog").dialog({
+        autoOpen: false,
+        width: 600,
+        minHeight: 500,
+        show: {
+            effect: "blind",
+            duration: 1000,
+        },
+        hide: {
+            effect: "blind",
+            duration: 1000,
+        },
+        position: { my: "center", at: "center", of: window },
+    });
+
+    $("#opener").on("click", function() {
+        if (!$("#Legenddialog").dialog("isOpen")) {
+            $("#Legenddialog").dialog("open");
+        } else {
+            $("#Legenddialog").dialog("close");
+        }
+    });
+
+    $("#analytic").on("click", function() {
+        $("#dialog").dialog("open");
+    });
+
+    $("#Legenddialog").dialog({
+        create: function(event, ui) {
+            var widget = $(this).dialog("widget");
+            $(".ui-dialog-titlebar-close span", widget)
+                .removeClass("ui-icon-closethick")
+                .addClass("ui-icon-minusthick");
+        },
+        autoOpen: false,
+        width: 300,
+        show: {
+            effect: "blind",
+            duration: 1000,
+        },
+        hide: {
+            effect: "blind",
+            duration: 1000,
+        },
+    });
+
+    $("#about_dialog").dialog({
+        autoOpen: false,
+        width: 900,
+        show: {
+            effect: "blind",
+            duration: 1000,
+        },
+        hide: {
+            effect: "blind",
+            duration: 1000,
+        },
+    });
+
+    $("#changedetection").dialog({
+        autoOpen: false,
+        width: 600,
+        minHeight: 500,
+        show: {
+            effect: "blind",
+            duration: 1000,
+        },
+        hide: {
+            effect: "blind",
+            duration: 1000,
+        },
+    });
+
+    $("#info").on("click", function() {
+        if (!$("#about_dialog").dialog("isOpen")) {
+            $("#about_dialog").dialog("open");
+        } else {
+            $("#about_dialog").dialog("close");
+        }
+    });
+
+    $(".js-range-slider").ionRangeSlider({
+        skin: "round",
+        grid: true,
+        // from: 2015,
+        values: [2015, 2018, 2019, 2020],
+    });
+
+    function initComparisons() {
+        var x, i;
+        /* Find all elements with an "overlay" class: */
+        x = document.getElementsByClassName("img-comp-overlay");
+        for (i = 0; i < x.length; i++) {
+            /* Once for each "overlay" element:
+              pass the "overlay" element as a parameter when executing the compareImages function: */
+            compareImages(x[i]);
+        }
+
+        function compareImages(img) {
+            var slider,
+                img,
+                clicked = 0,
+                w,
+                h;
+            /* Get the width and height of the img element */
+            w = img.offsetWidth;
+            h = img.offsetHeight;
+            /* Set the width of the img element to 50%: */
+            img.style.width = w / 3.5+ "px";
+            /* Create slider: */
+            slider = document.createElement("DIV");
+            slider.setAttribute("class", "img-comp-slider");
+            /* Insert slider */
+            img.parentElement.insertBefore(slider, img);
+            /* Position the slider in the middle: */
+            slider.style.top = h / 2 - slider.offsetHeight / 2 + "px";
+            slider.style.left = w / 3.5 - slider.offsetWidth / 3.5+ "px";
+            /* Execute a function when the mouse button is pressed: */
+            slider.addEventListener("mousedown", slideReady);
+            /* And another function when the mouse button is released: */
+            window.addEventListener("mouseup", slideFinish);
+            /* Or touched (for touch screens: */
+            slider.addEventListener("touchstart", slideReady);
+            /* And released (for touch screens: */
+            window.addEventListener("touchend", slideFinish);
+
+            function slideReady(e) {
+                /* Prevent any other actions that may occur when moving over the image: */
+                e.preventDefault();
+                /* The slider is now clicked and ready to move: */
+                clicked = 1;
+                /* Execute a function when the slider is moved: */
+                window.addEventListener("mousemove", slideMove);
+                window.addEventListener("touchmove", slideMove);
+            }
+
+            function slideFinish() {
+                /* The slider is no longer clicked: */
+                clicked = 0;
+            }
+
+            function slideMove(e) {
+                var pos;
+                /* If the slider is no longer clicked, exit this function: */
+                if (clicked == 0) return false;
+                /* Get the cursor's x position: */
+                pos = getCursorPos(e);
+                /* Prevent the slider from being positioned outside the image: */
+                if (pos < 0) pos = 0;
+                if (pos > w) pos = w;
+                /* Execute a function that will resize the overlay image according to the cursor: */
+                slide(pos);
+            }
+
+            function getCursorPos(e) {
+                var a,
+                    x = 0;
+                e = e || window.event;
+                /* Get the x positions of the image: */
+                a = img.getBoundingClientRect();
+                /* Calculate the cursor's x coordinate, relative to the image: */
+                x = e.pageX - a.left;
+                /* Consider any page scrolling: */
+                x = x - window.pageXOffset;
+                return x;
+            }
+
+            function slide(x) {
+                /* Resize the image: */
+                img.style.width = x + "px";
+                /* Position the slider: */
+                slider.style.left = img.offsetWidth - slider.offsetWidth / 2 + "px";
+            }
+        }
+    }
+
+    initComparisons();
+    mymap2.dragging.disable();
+
+
+    function convert(string) {
+        return string.split(".")[0];
+    }
+
+    // ################################  Load galamsey pic ####################################
+
+    function onEach_Imagepoints(feature, layer) {
+        // layer.on({ click: zoomToFeaturerpoint,
+        //  });
+
+        labeltoshow = '<div class="row">';
+
+        labeltoshow +=
+            '<a class="grouped_elements" data-fancybox="gallery" rel="group1"  href="https://servir.s3.eu-central-1.amazonaws.com/' +
+            convert(feature.properties.img) +
+            '.jpg "><img src="https://servir.s3.eu-central-1.amazonaws.com/' +
+            convert(feature.properties.img) +
+            '.jpg" style="width:100%" alt=""/></a>';
+
+        labeltoshow += "</div>";
+        labeltoshow +=
+            '<div class="row"> <h5> ' + feature.properties.date + "</h6>";
+        // labeltoshow +=
+        labeltoshow += "</div>";
+
+        layer.bindPopup(labeltoshow, { Width: "500px" });
+    }
+
+    $("a.grouped_elements").fancybox();
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
