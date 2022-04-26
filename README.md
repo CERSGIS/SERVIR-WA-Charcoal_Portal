@@ -5,7 +5,7 @@ The Charcoal Production Site Monitoring Service, a joint initiative of SERVIR-PC
 
 The Monitoring Service is a web-based platform for visualizing the spatial distribution of charcoal production sites, thereby facilitating forest degradation monitoring in the study areas. Very high-resolution imagery from Google Earth and remote sensing data from Landsat 7 and Landsat 8 will be used to identify charcoal kilns and the production of tree cover density maps. The information will aid in the monitoring of tree cover loss for estimating carbon emissions and for district-level land use planning purposes.
 
-![SERVIR West Africa - Charcoal Production Site Monitoring System](readMe-Media/galamsey.jpg?raw=true)
+![SERVIR West Africa - Charcoal Production Site Monitoring System](readMe-Media/charcoal.jpg?raw=true)
 
 ### Portal
 Visit (http://charcoalportal.cersgis.org/) to view the portal.
