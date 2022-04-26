@@ -14,11 +14,8 @@ Visit (http://charcoalportal.cersgis.org/) to view the portal.
 [![Monitoring Charcoal Production In Ghana (West Gonja) Using Earth Observation Data](https://img.youtube.com/vi/JhMrNbmCmdQ/0.jpg)](https://www.youtube.com/watch?v=JhMrNbmCmdQ)
 
 ## Useful Links
-[SERVIR](https://servirglobal.net/)
-
-[CERSGIS](https://cersgis.org/)
-
-[USAID](https://www.usaid.gov/)
-
+[SERVIR](https://servirglobal.net/) || 
+[CERSGIS](https://cersgis.org/) || 
+[USAID](https://www.usaid.gov/) || 
 [NASA](https://www.nasa.gov/)
 
