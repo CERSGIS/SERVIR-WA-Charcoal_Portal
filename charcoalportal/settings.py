@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'charcoalportal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'charcoal',
-        'USER': 'postgres',
-        'PASSWORD':'C3r5g15gh',
-        'HOST':'localhost', 
-        'PORT':'5432'
+        'NAME': '<name_variable>', # 'NAME': 'my_db',
+        'USER': '<user_variable>', # 'USER': 'postgress',
+        'PASSWORD':'<password_variable>', # 'PASSWORD': 'my_password',
+        'HOST':'localhost',
+        'PORT':'<port_number_variable>' # 'PORT': '8080'
     },
 
 }
